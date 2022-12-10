@@ -21,7 +21,7 @@ screen = []
 for cycles in range(240):
     pixel = cycles % 40
     sprite = register_cycles[cycles+1]
-    screen.append("#" if pixel - 1 <= sprite <= pixel + 1 else ".")
+    screen.append("█" if pixel - 1 <= sprite <= pixel + 1 else " ")
 
 print("Part Two:")
 for row in range(6):
