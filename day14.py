@@ -61,7 +61,7 @@ while True:
 print("Part One: %d" % sand_count)
 
 floor += 2
-while True :
+while True:
     sand_coord = (500, 0)
     while True:
         next_coord = tuple(map(sum, zip(sand_coord, (0, 1))))
