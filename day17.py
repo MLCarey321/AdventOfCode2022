@@ -81,9 +81,8 @@ while True:
         jet = (jet + 1) % len(jets)
     i += 1
 
-print("Last iteration was", i)
 if i > 2022:
-    print("Part One: %d" % [v for v in cycles.values() if v[1] == 2022][0])
+    print("Part One: %d" % [v for v in cycles.values() if v[1] == 2022][0][0])
 else:
     print("Part One: %d" % get_height_for_iteration(2022))
 
