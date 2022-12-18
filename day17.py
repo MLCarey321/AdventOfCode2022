@@ -12,8 +12,8 @@ def pretty_print(tuples):
 
 
 def get_height_for_iteration(iteration):
-    global cycle_length, cycle_height, jet_sequence, jet_cycle, cycles
-    remaining = 2022 - iteration
+    global cycle_length, cycle_height, jet_sequence, jet_cycle, cycles, last_iteration
+    remaining = iteration - last_iteration
     full_cycles = remaining // cycle_length
     excess = remaining % cycle_length
     final = height + (full_cycles * cycle_height)
@@ -36,9 +36,6 @@ down = (-1, 0)
 jet = 0
 i = 0
 cycles = {}
-base = (0, 0)
-cycle_height = 0
-cycle_length = 0
 while True:
     height = max([x for (x, y) in chamber])
     shape_id = i % len(shapes)
@@ -49,6 +46,7 @@ while True:
         jet_sequence = list(cycles.keys())
         cycle_index = jet_sequence.index((jet, shape_id))
         jet_cycle = jet_sequence[cycle_index:]
+        last_iteration = i
         break
     else:
         cycles[(jet, shape_id)] = (height, i)
