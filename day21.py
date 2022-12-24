@@ -3,7 +3,7 @@ from copy import deepcopy
 
 def get_monkey_yell(name):
     global monkeys
-    if isinstance(monkeys[name], int):
+    if isinstance(monkeys[name], int) or isinstance(monkeys[name], float):
         return monkeys[name]
     equation = monkeys[name]
     op = equation[1]
@@ -21,7 +21,7 @@ def get_monkey_yell(name):
 
 def get_full_equation(name):
     global monkeys
-    if isinstance(monkeys[name], int):
+    if isinstance(monkeys[name], int) or isinstance(monkeys[name], float):
         return str(monkeys[name])
     if isinstance(monkeys[name], str):
         return monkeys[name]
@@ -42,18 +42,18 @@ def solve_for_x(x_side, y_side):
         ends = x_side.split()
         if ends[0] == "X":
             op = ends[1]
-            amount = int(ends[2])
+            amount = float(ends[2])
             x_side = "X"
         elif ends[-1] == "X":
             op = ends[1]
-            amount = int(ends[0])
+            amount = float(ends[0])
             x_side = "X"
         elif "(" not in ends[0]:
-            amount = int(ends[0])
+            amount = float(ends[0])
             op = ends[1]
             x_side = " ".join(ends[2:])
         elif ")" not in ends[-1]:
-            amount = int(ends[-1])
+            amount = float(ends[-1])
             op = ends[-2]
             x_side = " ".join(ends[:-2])
         else:
@@ -61,22 +61,30 @@ def solve_for_x(x_side, y_side):
             print(ends)
             return -1
         if op == "+":
-            print("\tSubtracting %d from both sides" % amount)
+            # print("\tSubtracting %s from both sides" % str(amount))
             y_side -= amount
         elif op == "-":
-            print("\tAdding %d to both sides" % amount)
-            y_side += amount
+            if "(" not in ends[0] and ends[0] != "X":
+                # print("\t%s - x = y --> x = %s - y" % (str(amount), str(amount)))
+                y_side = amount - y_side
+            else:
+                # print("\tAdding %s to both sides" % str(amount))
+                y_side += amount
         elif op == "*":
-            print("\tDividing both sides by %d" % amount)
-            y_side //= amount
-        elif op == "//":
-            print("\tMultiplying both sides by %d" % amount)
-            y_side *= amount
+            # print("\tDividing both sides by %s" % str(amount))
+            y_side /= amount
+        elif op == "/":
+            if "(" not in ends[0] and ends[0] != "X":
+                # print("\t%s / x = y --> x = %s / y" % (str(amount), str(amount)))
+                y_side = amount / y_side
+            else:
+                # print("\tMultiplying both sides by %s" % str(amount))
+                y_side *= amount
         else:
             print("ERROR!")
             print(ends)
             return -1
-        print("%s = %d" % (x_side, y_side))
+        # print("%s = %s" % (x_side, str(y_side)))
     return y_side
 
 
@@ -87,8 +95,8 @@ for line in open("day21.txt"):
         init[monkey] = int(yell.strip())
     else:
         init[monkey] = yell.strip().split()
-        if init[monkey][1] == "/":
-            init[monkey][1] = "//"
+        # if init[monkey][1] == "/":
+        #     init[monkey][1] = "//"
 monkeys = deepcopy(init)
 print("Part One: %d" % get_monkey_yell("root"))
 
@@ -98,21 +106,9 @@ monkeys["humn"] = "X"
 left = get_full_equation(monkeys["root"][0])
 right = get_full_equation(monkeys["root"][2])
 if "X" not in left:
-    print("%d = %s" % (eval(left), right))
+    # print("%d = %s" % (eval(left), right))
     part_2 = solve_for_x(x_side=right, y_side=eval(left))
 if "X" not in right:
-    print("%s = %d" % (left, eval(right)))
+    # print("%s = %d" % (left, eval(right)))
     part_2 = solve_for_x(x_side=left, y_side=eval(right))
-# 9535830990200 is too high
-# 3247317268284 is solution -- how to calculate?
 print("Part Two: %d" % part_2)
-monkeys["humn"] = part_2
-print(get_monkey_yell("root"))
-
-monkeys = deepcopy(init)
-monkeys["root"][1] = "="
-monkeys["humn"] = 3247317268284
-left = get_full_equation(monkeys["root"][0])
-right = get_full_equation(monkeys["root"][2])
-print((eval(left) - eval(right)))
-print(get_monkey_yell("root"))
